@@ -1,5 +1,0 @@
-# lol
-
-```py
-print("hello")
-```
