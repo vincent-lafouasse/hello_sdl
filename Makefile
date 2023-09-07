@@ -20,6 +20,6 @@ clean:
 re: clean $(EXEC)
 
 fmt:
-	clang-format -i $(SRC)
+	clang-format -i $(shell find src -name '*.c')
 
 .PHONY: run clean re fmt

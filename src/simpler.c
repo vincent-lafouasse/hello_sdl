@@ -10,10 +10,6 @@
 #define WIDTH 800
 #define TARGET_FPS 100
 
-#define IMG_PATH "src/crab.png"
-#define IMG_WIDTH 230
-#define IMG_HEIGHT 150
-
 #define NICE_BLUE 33, 118, 174, 255
 
 void cap_fps(uint32_t frame_beginning_tick, int target_fps);
@@ -27,11 +23,6 @@ int main(void)
     SDL_Window* window;
     SDL_Renderer* renderer;
     init_SDL(WIDTH, HEIGHT, &window, &renderer);
-
-    SDL_Surface* crab_surface = IMG_Load(IMG_PATH);
-    SDL_Texture* crab_texture =
-        SDL_CreateTextureFromSurface(renderer, crab_surface);
-    SDL_Rect crab_rect = (SDL_Rect){69, 420, IMG_WIDTH, IMG_HEIGHT};
 
     SDL_Event event;
     uint32_t frame_beginning_tick;
@@ -51,8 +42,6 @@ int main(void)
 
         SDL_SetRenderDrawColor(renderer, NICE_BLUE);
         SDL_RenderClear(renderer);
-
-        SDL_RenderCopy(renderer, crab_texture, NULL, &crab_rect);
 
         SDL_RenderPresent(renderer);
 

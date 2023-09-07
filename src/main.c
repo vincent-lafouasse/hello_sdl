@@ -34,18 +34,19 @@ int main(void)
     init_SDL(WIDTH, HEIGHT, &window, &renderer);
 
     SDL_Surface* crab_surface = IMG_Load(IMG_PATH);
-    SDL_Texture* crab_texture = SDL_CreateTextureFromSurface(renderer, crab_surface);
-	SDL_Rect crab_rect = (SDL_Rect){69, 420, IMG_WIDTH, IMG_HEIGHT};
-	bool render_crab = true;
+    SDL_Texture* crab_texture =
+        SDL_CreateTextureFromSurface(renderer, crab_surface);
+    SDL_Rect crab_rect = (SDL_Rect){69, 420, IMG_WIDTH, IMG_HEIGHT};
+    bool render_crab = true;
 
-	SDL_Rect square = (SDL_Rect){0, 0, SQUARE_SIZE, SQUARE_SIZE};
+    SDL_Rect square = (SDL_Rect){0, 0, SQUARE_SIZE, SQUARE_SIZE};
 
     SDL_Event event;
     uint32_t frame_beginning_tick;
     bool running = true;
 
     while (running)
-	{
+    {
         frame_beginning_tick = SDL_GetTicks();
         if (SDL_PollEvent(&event))
         {
@@ -54,21 +55,21 @@ int main(void)
                 running = false;
                 break;
             }
-			if (event.type == SDL_MOUSEBUTTONUP && mouse_is_in_rect(&crab_rect))
-			{
-				render_crab = !render_crab;
-			}
+            if (event.type == SDL_MOUSEBUTTONUP && mouse_is_in_rect(&crab_rect))
+            {
+                render_crab = !render_crab;
+            }
         }
 
-		SDL_SetRenderDrawColor(renderer, NICE_BLUE);
+        SDL_SetRenderDrawColor(renderer, NICE_BLUE);
         SDL_RenderClear(renderer);
 
-		SDL_SetRenderDrawColor(renderer, LILAC);
-		move_square(&square);
-		SDL_RenderFillRect(renderer, &square);
+        SDL_SetRenderDrawColor(renderer, LILAC);
+        move_square(&square);
+        SDL_RenderFillRect(renderer, &square);
 
-		if (render_crab)
-			SDL_RenderCopy(renderer, crab_texture, NULL, &crab_rect);
+        if (render_crab)
+            SDL_RenderCopy(renderer, crab_texture, NULL, &crab_rect);
 
         SDL_RenderPresent(renderer);
 
@@ -82,25 +83,25 @@ int main(void)
 
 bool mouse_is_in_rect(SDL_Rect* rect)
 {
-	int x;
-	int y;
-	SDL_GetMouseState(&x, &y);
+    int x;
+    int y;
+    SDL_GetMouseState(&x, &y);
 
-	bool x_is_in = (x >= rect->x && x <= (rect->x + rect->w));
-	bool y_is_in = (y >= rect->y && y <= (rect->y + rect->h));
-	return x_is_in && y_is_in;
+    bool x_is_in = (x >= rect->x && x <= (rect->x + rect->w));
+    bool y_is_in = (y >= rect->y && y <= (rect->y + rect->h));
+    return x_is_in && y_is_in;
 }
 
 void move_square(SDL_Rect* square)
 {
-	static uint32_t last_move_time = 0;
+    static uint32_t last_move_time = 0;
 
-	if (SDL_GetTicks() - last_move_time > 10)
-	{
-		last_move_time = SDL_GetTicks();
-		square->x += 1;
-		square->y += 1;
-	}
+    if (SDL_GetTicks() - last_move_time > 10)
+    {
+        last_move_time = SDL_GetTicks();
+        square->x += 1;
+        square->y += 1;
+    }
 }
 
 void cap_fps(uint32_t frame_beginning_tick, int target_fps)
