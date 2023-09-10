@@ -13,16 +13,13 @@
 #define NICE_BLUE 33, 118, 174, 255
 
 void cap_fps(uint32_t frame_beginning_tick, int target_fps);
-void init_SDL(int width,
-              int height,
-              SDL_Window** return_window,
-              SDL_Renderer** return_renderer);
+void init_SDL(SDL_Window** return_window, SDL_Renderer** return_renderer);
 
 int main(void)
 {
     SDL_Window* window;
     SDL_Renderer* renderer;
-    init_SDL(WIDTH, HEIGHT, &window, &renderer);
+    init_SDL(&window, &renderer);
 
     SDL_Event event;
     uint32_t frame_beginning_tick;
@@ -64,10 +61,7 @@ void cap_fps(uint32_t frame_beginning_tick, int target_fps)
     }
 }
 
-void init_SDL(int width,
-              int height,
-              SDL_Window** return_window,
-              SDL_Renderer** return_renderer)
+void init_SDL(SDL_Window** return_window, SDL_Renderer** return_renderer)
 {
     const int SCREEN_X_POS = 0;
     const int SCREEN_Y_POS = 0;
@@ -78,7 +72,7 @@ void init_SDL(int width,
         exit(EXIT_FAILURE);
     }
     *return_window = SDL_CreateWindow("a window", SCREEN_X_POS, SCREEN_Y_POS,
-                                      width, height, SDL_WINDOW_OPENGL);
+                                      WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
     if (*return_window == NULL)
     {
         SDL_Log("Could not create a window: %s", SDL_GetError());

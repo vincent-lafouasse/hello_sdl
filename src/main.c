@@ -20,29 +20,25 @@
 #define LILAC 226, 207, 234, 255
 
 void cap_fps(uint32_t frame_beginning_tick, int target_fps);
-void init_SDL(int width,
-              int height,
-              SDL_Window** return_window,
-              SDL_Renderer** return_renderer);
-void move_square(SDL_Rect* square);
+void init_SDL(SDL_Window** return_window, SDL_Renderer** return_renderer);
 bool mouse_is_in_rect(SDL_Rect* rect);
 
 int main(void)
 {
     SDL_Window* window;
     SDL_Renderer* renderer;
-    init_SDL(WIDTH, HEIGHT, &window, &renderer);
+    init_SDL(&window, &renderer);
 
-    SDL_Surface* crab_surface = IMG_Load(IMG_PATH);
     SDL_Texture* crab_texture =
-        SDL_CreateTextureFromSurface(renderer, crab_surface);
-    SDL_Rect crab_rect = (SDL_Rect){69, 420, IMG_WIDTH, IMG_HEIGHT};
-    bool render_crab = true;
+        SDL_CreateTextureFromSurface(renderer, IMG_Load(IMG_PATH));
+    SDL_Rect crab_rect = {69, 420, IMG_WIDTH, IMG_HEIGHT};
 
-    SDL_Rect square = (SDL_Rect){0, 0, SQUARE_SIZE, SQUARE_SIZE};
+    SDL_Rect square = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
 
     SDL_Event event;
     uint32_t frame_beginning_tick;
+    int frame_count = 0;
+    bool render_crab = true;
     bool running = true;
 
     while (running)
@@ -61,11 +57,18 @@ int main(void)
             }
         }
 
+        if (frame_count == 3)
+        {
+            frame_count = 0;
+            square.x += 1;
+            square.y += 1;
+        }
+        frame_count++;
+
         SDL_SetRenderDrawColor(renderer, NICE_BLUE);
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, LILAC);
-        move_square(&square);
         SDL_RenderFillRect(renderer, &square);
 
         if (render_crab)
@@ -89,19 +92,7 @@ bool mouse_is_in_rect(SDL_Rect* rect)
 
     bool x_is_in = (x >= rect->x && x <= (rect->x + rect->w));
     bool y_is_in = (y >= rect->y && y <= (rect->y + rect->h));
-    return x_is_in && y_is_in;
-}
-
-void move_square(SDL_Rect* square)
-{
-    static uint32_t last_move_time = 0;
-
-    if (SDL_GetTicks() - last_move_time > 10)
-    {
-        last_move_time = SDL_GetTicks();
-        square->x += 1;
-        square->y += 1;
-    }
+    return (x_is_in && y_is_in);
 }
 
 void cap_fps(uint32_t frame_beginning_tick, int target_fps)
@@ -111,15 +102,10 @@ void cap_fps(uint32_t frame_beginning_tick, int target_fps)
     int time_to_wait = ms_per_frame - (frame_end_tick - frame_beginning_tick);
 
     if (time_to_wait > 0)
-    {
         SDL_Delay(time_to_wait);
-    }
 }
 
-void init_SDL(int width,
-              int height,
-              SDL_Window** return_window,
-              SDL_Renderer** return_renderer)
+void init_SDL(SDL_Window** return_window, SDL_Renderer** return_renderer)
 {
     const int SCREEN_X_POS = 0;
     const int SCREEN_Y_POS = 0;
@@ -130,7 +116,7 @@ void init_SDL(int width,
         exit(EXIT_FAILURE);
     }
     *return_window = SDL_CreateWindow("a window", SCREEN_X_POS, SCREEN_Y_POS,
-                                      width, height, SDL_WINDOW_OPENGL);
+                                      WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
     if (*return_window == NULL)
     {
         SDL_Log("Could not create a window: %s", SDL_GetError());
